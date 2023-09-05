@@ -1,6 +1,28 @@
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
 
 export const todoListState = atom({
     key:'todoListState',
     default:[]
+})
+
+export const todoListFilterstate = atom({
+    key:'todoListFilterState',
+    default:'Show All'
+})
+
+export const filteredTodoListState = selector({
+    key:'filteredTodoListState',
+    get:({get})=>{
+        const filter = get(todoListFilterstate);
+        const list = get(todoListState);
+        console.log(filter);
+        switch(filter){
+            case 'Show Completed':
+                return list.filter((item) => item.isComplete);
+            case 'Show Uncompleted':
+                return list.filter((item) =>!item.isComplete);
+            default:
+                return list;
+        }
+    }
 })
